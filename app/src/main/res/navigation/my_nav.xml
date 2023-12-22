@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/splashScreenFragment">
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.quiz.Fragment.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailQuestionFragment"
+        android:name="com.example.quiz.Fragment.DetailQuestionFragment"
+        android:label="fragment_detail_question"
+        tools:layout="@layout/fragment_detail_question" >
+        <action
+            android:id="@+id/action_detailQuestionFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_detailQuestionFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.quiz.Fragment.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.quiz.Fragment.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_beginScreenFragment"
+            app:destination="@id/beginScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.quiz.Fragment.SplashScreenFragment"
+        android:label="SplashScreenFragment" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/beginScreenFragment"
+        android:name="com.example.quiz.Fragment.BeginScreenFragment"
+        android:label="fragment_begin_screen"
+        tools:layout="@layout/fragment_begin_screen" >
+        <action
+            android:id="@+id/action_beginScreenFragment_to_detailQuestionFragment"
+            app:destination="@id/detailQuestionFragment" />
+        <action
+            android:id="@+id/action_beginScreenFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+</navigation>
