@@ -1,44 +1,42 @@
 package com.example.quiz.ViewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quiz.Repositories.AuthRepository
 import com.google.firebase.auth.FirebaseUser
 
+class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
+    private var _userLiveData: MutableLiveData<FirebaseUser?> = MutableLiveData()
+    val userLiveData: LiveData<FirebaseUser?> get() = _userLiveData
 
+    private var _errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
+    val errorMessageLiveData: LiveData<String> get() = _errorMessageLiveData
 
-class AuthViewModel(application : Application) : ViewModel() {
-
-    private var firebaseUserMutableLiveData: MutableLiveData<FirebaseUser?> = MutableLiveData()
-    private val currentUser: FirebaseUser?
-    private val repository: AuthRepository = AuthRepository(application)
-
-    init {
-        currentUser = repository.getCurrentUser()
-        firebaseUserMutableLiveData = repository.getFirebaseUserMutableLiveData()
+    fun signIn(email: String, password: String) {
+        authRepository.signIn(email, password,
+            onComplete = { user ->
+                _userLiveData.postValue(user)
+            },
+            onError = { errorMessage ->
+                _errorMessageLiveData.postValue(errorMessage)
+            }
+        )
     }
 
-
-    fun getFirebaseUserMutableLiveData(): MutableLiveData<FirebaseUser?>{
-        return firebaseUserMutableLiveData
-    }
-
-    fun getCurrentUser(): FirebaseUser?{
-        return currentUser
-    }
-
-    fun signUp(email : String , password : String){
-        repository.signUp(email, password)
-    }
-
-    fun signIn(email : String , password : String){
-        repository.signIn(email, password)
+    fun signUp(email: String, password: String) {
+        authRepository.signUp(email, password,
+            onComplete = { user ->
+                _userLiveData.postValue(user)
+            },
+            onError = { errorMessage ->
+                _errorMessageLiveData.postValue(errorMessage)
+            }
+        )
     }
 
     fun signOut(){
-        repository.signOut()
+        authRepository.signOut()
     }
 }
 

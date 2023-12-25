@@ -1,34 +1,48 @@
 package com.example.quiz.Fragment
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.example.quiz.Model.QuizDetailModel
 import com.example.quiz.R
+import com.example.quiz.Repositories.AuthRepository
+import com.example.quiz.Repositories.QuizDetailRepository
+import com.example.quiz.ViewModel.AuthViewModel
+import com.example.quiz.ViewModel.AuthViewModelFactory
+import com.example.quiz.ViewModel.QuizDetailViewModelFactory
+import com.example.quiz.ViewModel.QuizListViewModel
+import com.google.android.material.textfield.TextInputLayout
+import kotlin.concurrent.timer
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [DetailQuestionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DetailQuestionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1 : String? = null
-    private var param2 : String? = null
-
-    override fun onCreate(savedInstanceState : Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private val quizDetailViewModel by viewModels<QuizListViewModel> {
+        QuizDetailViewModelFactory(QuizDetailRepository())
     }
+    private lateinit var countDownTimer: CountDownTimer
+
+    private lateinit var navController: NavController
+
+    private lateinit var optionAButton : Button
+    private lateinit var optionBButton : Button
+    private lateinit var optionCButton : Button
+    private lateinit var optionDButton : Button
+    private lateinit var finishButton : Button
+    private lateinit var nextButton : Button
+    private lateinit var questionTv : TextView
+    private lateinit var answerTv : TextView
+    private lateinit var questionNumberTv : TextView
+    private lateinit var timerCount : TextView
 
     override fun onCreateView(
         inflater : LayoutInflater , container : ViewGroup? ,
@@ -38,23 +52,79 @@ class DetailQuestionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_detail_question , container , false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DetailQuestionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1 : String , param2 : String) =
-            DetailQuestionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1 , param1)
-                    putString(ARG_PARAM2 , param2)
+    override fun onViewCreated(view : View , savedInstanceState : Bundle?) {
+        super.onViewCreated(view , savedInstanceState)
+
+        navController = Navigation.findNavController(view)
+        optionAButton = view.findViewById(R.id.btnOptionA)
+        optionBButton = view.findViewById(R.id.btnOptionB)
+        optionCButton = view.findViewById(R.id.btnOptionC)
+        optionDButton = view.findViewById(R.id.btnOptionD)
+        finishButton = view.findViewById(R.id.btnFinish)
+        nextButton = view.findViewById(R.id.btnNext)
+        questionTv = view.findViewById(R.id.tvQuizDetail)
+        answerTv = view.findViewById(R.id.tvAnswer)
+        questionNumberTv = view.findViewById(R.id.tvQuestionNumber)
+        timerCount = view.findViewById(R.id.tvCountTimer)
+
+    }
+
+//    private fun getQuiz(i: Int){
+//        quizDetailViewModel.quizLiveData.observe(viewLifecycleOwner){quizList ->
+//            questionTv.text =   quizList.get(i-1).quiz
+//            optionAButton.text =   quizList.get(i-1).optionA
+//            optionBButton.text =   quizList.get(i-1).optionB
+//            optionCButton.text =   quizList.get(i-1).optionC
+//            optionDButton.text =   quizList.get(i-1).optionD
+//
+//        }
+//    }
+
+
+    private fun getQuiz() {
+        quizDetailViewModel.quizLiveData.observe(viewLifecycleOwner) { quizList ->
+            if (quizList.isNotEmpty()) {
+                val quiz = quizList[0]
+                questionTv.text = quiz.quiz
+                optionAButton.text = quiz.optionA
+                optionBButton.text = quiz.optionB
+                optionCButton.text = quiz.optionC
+                optionDButton.text = quiz.optionD
+                optionAButton.setOnClickListener {
+                    checkAnswer(quiz.answer , quiz.optionA)
                 }
+                optionBButton.setOnClickListener {
+                    checkAnswer(quiz.answer , quiz.optionB)
+                }
+                optionCButton.setOnClickListener {
+                    checkAnswer(quiz.answer , quiz.optionC)
+                }
+                optionDButton.setOnClickListener {
+                    checkAnswer(quiz.answer , quiz.optionD)
+                }
+                startTimer(quiz.timer)
             }
+        }
+    }
+    private fun checkAnswer(correctAnswer: String, selectedAnswer: String) {
+        if (correctAnswer == selectedAnswer) {
+            Toast.makeText(requireContext(), "Correct", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startTimer(time: Long) {
+        countDownTimer = object : CountDownTimer(time * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                timerCount.text = "$secondsRemaining"
+            }
+
+            override fun onFinish() {
+                timerCount.text = "Time out"
+            }
+        }
+        countDownTimer.start()
     }
 }

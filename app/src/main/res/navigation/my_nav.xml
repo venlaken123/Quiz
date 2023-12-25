@@ -22,15 +22,16 @@
         <action
             android:id="@+id/action_detailQuestionFragment_to_resultFragment"
             app:destination="@id/resultFragment" />
-        <action
-            android:id="@+id/action_detailQuestionFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
         android:name="com.example.quiz.Fragment.ResultFragment"
         android:label="fragment_result"
-        tools:layout="@layout/fragment_result" />
+        tools:layout="@layout/fragment_result" >
+        <action
+            android:id="@+id/action_resultFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.quiz.Fragment.SignInFragment"

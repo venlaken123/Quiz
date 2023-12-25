@@ -7,24 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.quiz.R
+import com.example.quiz.Repositories.AuthRepository
 import com.example.quiz.ViewModel.AuthViewModel
+import com.example.quiz.ViewModel.AuthViewModelFactory
 import com.google.android.material.textfield.TextInputLayout
 
 
 class SignUpFragment : Fragment() {
+    private val authViewModel by viewModels<AuthViewModel>{
+        AuthViewModelFactory(AuthRepository())
+    }
 
     private lateinit var emailEdt : TextInputLayout
     private lateinit var passwordEdt : TextInputLayout
     private lateinit var signUpButton : Button
-    private lateinit var backButton : Button
-    private val viewModel: AuthViewModel by lazy {
-        AuthViewModel(Application())
-    }
+    private lateinit var backButton : ImageButton
     private lateinit var navController : NavController
 
     override fun onCreateView(
@@ -45,7 +49,7 @@ class SignUpFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         backButton.setOnClickListener {
-            navController.navigate((R.id.action_signUpFragment_to_signInFragment))
+            navController.navigate(R.id.action_signUpFragment_to_signInFragment)
         }
 
         signUpButton.setOnClickListener {
@@ -53,23 +57,18 @@ class SignUpFragment : Fragment() {
             val password = passwordEdt.editText?.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                viewModel.signUp(email , password)
-                Toast.makeText(context , "Register successfully" , Toast.LENGTH_SHORT).show()
-                viewModel.getFirebaseUserMutableLiveData().observe(viewLifecycleOwner) { firebaseUser ->
-                    if (firebaseUser != null) {
-                        navController.navigate(R.id.action_signUpFragment_to_signInFragment)
-                    } else {
-                        Toast.makeText(
-                            requireContext() , "User data not available" , Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                authViewModel.signUp(email, password)
+            }
+
+            authViewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser ->
+                if (firebaseUser != null) {
+                    navController.navigate(R.id.action_signUpFragment_to_signInFragment)
+                } else {
+                    Toast.makeText(
+                        requireContext(), "User data not available", Toast.LENGTH_SHORT
+                    ).show()
                 }
-            } else {
-                Toast.makeText(
-                    requireContext() , "Please enter email and password" , Toast.LENGTH_SHORT
-                ).show()
             }
         }
     }
 }
-

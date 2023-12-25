@@ -10,17 +10,20 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.quiz.R
+import com.example.quiz.Repositories.AuthRepository
 import com.example.quiz.ViewModel.AuthViewModel
+import com.example.quiz.ViewModel.AuthViewModelFactory
 import com.google.android.material.textfield.TextInputLayout
 
 
 class SignInFragment : Fragment() {
 
-    private val viewModel by lazy {
-        AuthViewModel(Application())
+    private val authViewModel by viewModels<AuthViewModel>{
+        AuthViewModelFactory(AuthRepository())
     }
     private lateinit var emailEdt: TextInputLayout
     private lateinit var passwordEdt: TextInputLayout
@@ -43,7 +46,6 @@ class SignInFragment : Fragment() {
         passwordEdt = view.findViewById(R.id.passwordInputLayout)
         signInButton = view.findViewById(R.id.buttonSignIn)
         signUpText = view.findViewById(R.id.textSignUp)
-
         navController = Navigation.findNavController(view)
 
         signUpText.setOnClickListener{
@@ -55,22 +57,27 @@ class SignInFragment : Fragment() {
             val password = passwordEdt.editText?.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                viewModel.signIn(email , password)
-                Toast.makeText(context , "Login successfully" , Toast.LENGTH_SHORT).show()
-                viewModel.getFirebaseUserMutableLiveData().observe(viewLifecycleOwner) { firebaseUser ->
-                    if (firebaseUser != null) {
-                        navController.navigate(R.id.action_signInFragment_to_beginScreenFragment)
-                    } else {
-                        Toast.makeText(
-                            requireContext() , "User data not available" , Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+                authViewModel.signIn(email , password)
             } else {
                 Toast.makeText(
                     requireContext() , "Please enter email and password" , Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        authViewModel.userLiveData.observe(viewLifecycleOwner){firebaseUser-> //tại sao k dùng this được (compile ERROR)
+            if(firebaseUser != null){
+                Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.action_signInFragment_to_beginScreenFragment)
+            }
+            else{
+                Toast.makeText(requireContext(), "User data not available", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        authViewModel.errorMessageLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            // Display error message if login fails
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }
