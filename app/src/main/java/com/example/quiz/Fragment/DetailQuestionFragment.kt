@@ -1,31 +1,24 @@
 package com.example.quiz.Fragment
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.quiz.Model.QuizDetailModel
 import com.example.quiz.R
-import com.example.quiz.Repositories.AuthRepository
 import com.example.quiz.Repositories.QuizDetailRepository
-import com.example.quiz.ViewModel.AuthViewModel
-import com.example.quiz.ViewModel.AuthViewModelFactory
 import com.example.quiz.ViewModel.QuizDetailViewModelFactory
 import com.example.quiz.ViewModel.QuizListViewModel
-import com.google.android.material.textfield.TextInputLayout
-import kotlin.concurrent.timer
 
 
 class DetailQuestionFragment : Fragment() {
@@ -89,6 +82,10 @@ class DetailQuestionFragment : Fragment() {
         }
         // Fetch quizzes
         quizDetailViewModel.getQuizzes()
+
+        finishButton.setOnClickListener{
+            showResultDialog()
+        }
     }
     private fun moveToNextQuestion(){
         val currentIndex = quizDetailViewModel.currentQuizIndex.value ?: 0
@@ -98,7 +95,7 @@ class DetailQuestionFragment : Fragment() {
             displayQuizData(quizDetailViewModel.getCurrentQuiz())
         } else {
             // Handle when all questions are finished
-            navController.navigate(R.id.action_detailQuestionFragment_to_resultFragment)
+            showResultDialog()
         }
     }
 
@@ -154,6 +151,9 @@ class DetailQuestionFragment : Fragment() {
 
                 override fun onFinish() {
                     timerCount.text = "Time's up!"
+                    questionTv.text = "Sorry, Time is up! Continue with next question"
+                    wrongAnswers++
+                    wrongTv.text = wrongAnswers.toString()
                     disableButtons()
                     //Bổ sung logic khi thời gian hết
                 }
@@ -201,5 +201,21 @@ class DetailQuestionFragment : Fragment() {
         else {
             button.setBackgroundColor(Color.RED)
         }
+    }
+    private fun showResultDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Quiz Completed")
+        alertDialogBuilder.setMessage("Do you want to play again or go to the result page?")
+
+        alertDialogBuilder.setPositiveButton("PLAY AGAIN") { _, _ ->
+            navController.navigate(R.id.detailQuestionFragment)
+        }
+
+        alertDialogBuilder.setNegativeButton("RESULT PAGE") { _, _ ->
+            navController.navigate(R.id.action_detailQuestionFragment_to_resultFragment)
+        }
+
+        alertDialogBuilder.setCancelable(false)
+        alertDialogBuilder.show()
     }
 }
