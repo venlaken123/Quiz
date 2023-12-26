@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_resultFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_resultFragment_to_detailQuestionFragment"
+            app:destination="@id/detailQuestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -50,6 +53,9 @@
         <action
             android:id="@+id/action_signInFragment_to_beginScreenFragment"
             app:destination="@id/beginScreenFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -71,4 +77,9 @@
             android:id="@+id/action_beginScreenFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.quiz.Fragment.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" />
 </navigation>

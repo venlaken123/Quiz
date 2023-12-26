@@ -43,5 +43,20 @@ class AuthRepository {
     fun signOut(){
         auth.signOut()
     }
+
+    fun resetPassword(
+        email: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onError("Failed to send password reset email")
+                }
+            }
+    }
 }
 

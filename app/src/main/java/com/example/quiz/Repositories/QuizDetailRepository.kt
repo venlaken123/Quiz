@@ -17,12 +17,12 @@ class QuizDetailRepository {
                 for (document in documents) {
                     val quizDetail = document.toObject(QuizDetailModel::class.java)
                     quizzes.add(quizDetail)
-                    Log.d("FirestoreTest", "Quizzes retrieved: $quizzes")
+                    Log.d("FirestoreTest" , "Quizzes retrieved: $quizzes")
                 }
                 callback(quizzes)
             }
-            .addOnFailureListener {exception ->
-                Log.e("FirestoreTest", "Error getting quizzes", exception)
+            .addOnFailureListener { exception ->
+                Log.e("FirestoreTest" , "Error getting quizzes" , exception)
                 callback(null)
             }
     }

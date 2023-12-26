@@ -22,13 +22,14 @@ import com.google.android.material.textfield.TextInputLayout
 
 class SignInFragment : Fragment() {
 
-    private val authViewModel by viewModels<AuthViewModel>{
+    private val authViewModel by viewModels<AuthViewModel> {
         AuthViewModelFactory(AuthRepository())
     }
-    private lateinit var emailEdt: TextInputLayout
-    private lateinit var passwordEdt: TextInputLayout
-    private lateinit var signInButton: Button
-    private lateinit var signUpText: TextView
+    private lateinit var emailEdt : TextInputLayout
+    private lateinit var passwordEdt : TextInputLayout
+    private lateinit var signInButton : Button
+    private lateinit var signUpText : TextView
+    private lateinit var forgotPasswordText: TextView
     private lateinit var navController : NavController
 
     override fun onCreateView(
@@ -46,13 +47,18 @@ class SignInFragment : Fragment() {
         passwordEdt = view.findViewById(R.id.passwordInputLayout)
         signInButton = view.findViewById(R.id.buttonSignIn)
         signUpText = view.findViewById(R.id.textSignUp)
+        forgotPasswordText = view.findViewById(R.id.textForgotPassword)
         navController = Navigation.findNavController(view)
 
-        signUpText.setOnClickListener{
-            navController.navigate((R.id.action_signInFragment_to_signUpFragment))
+        signUpText.setOnClickListener {
+            navController.navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
-        signInButton.setOnClickListener{
+        forgotPasswordText.setOnClickListener{
+            navController.navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
+        }
+
+        signInButton.setOnClickListener {
             val email = emailEdt.editText?.text.toString()
             val password = passwordEdt.editText?.text.toString()
 
@@ -65,19 +71,19 @@ class SignInFragment : Fragment() {
             }
         }
 
-        authViewModel.userLiveData.observe(viewLifecycleOwner){firebaseUser-> //tại sao k dùng this được (compile ERROR)
-            if(firebaseUser != null){
-                Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
+        authViewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser -> //tại sao k dùng this được (compile ERROR)
+            if (firebaseUser != null) {
+                Toast.makeText(context , "Welcome to Quiz Game" , Toast.LENGTH_SHORT).show()
                 navController.navigate(R.id.action_signInFragment_to_beginScreenFragment)
-            }
-            else{
-                Toast.makeText(requireContext(), "User data not available", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext() , "User data not available" , Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
         authViewModel.errorMessageLiveData.observe(viewLifecycleOwner) { errorMessage ->
             // Display error message if login fails
-            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext() , errorMessage , Toast.LENGTH_SHORT).show()
         }
     }
 }
