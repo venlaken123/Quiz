@@ -4,20 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/orange"
     tools:context=".Fragment.DetailQuestionFragment">
 
-
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewCorrectAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:text="Question"
+        android:text="Correct answer:"
         android:textSize="20dp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewWrongAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="Wrong answer:"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCorrectAnswer" />
+
+    <TextView
+        android:id="@+id/textViewCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="30dp"
+        android:text="0"
+        android:textSize="20dp"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewWrong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="30dp"
+        android:text="0"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCorrect" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -31,17 +67,19 @@
 
     <TextView
         android:id="@+id/tvCountTimer"
-        android:layout_width="45dp"
+        android:layout_width="100dp"
         android:layout_height="30dp"
         android:text="10"
         android:textSize="20dp"
         android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar2"
         app:layout_constraintEnd_toEndOf="@+id/progressBar2"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/progressBar2"
         app:layout_constraintTop_toTopOf="@+id/progressBar2"
-        app:layout_constraintVertical_bias="0.509" />
+        app:layout_constraintVertical_bias="0.512" />
 
     <TextView
         android:id="@+id/tvQuizDetail"
@@ -49,6 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
         android:text="question"
+        android:background="@color/white"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +101,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/white"
         android:text="A"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +116,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/white"
         android:text="B"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOptionA" />
@@ -86,7 +130,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/white"
         android:text="C"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOptionB" />
@@ -98,7 +144,9 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/white"
         android:text="D"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOptionC" />
@@ -110,6 +158,8 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
         android:text="FINISH"
         app:layout_constraintEnd_toStartOf="@+id/btnNext"
         app:layout_constraintHorizontal_bias="0.0"
@@ -122,6 +172,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="60dp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
         android:text="NEXT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOptionD" />
