@@ -1,42 +1,29 @@
 package com.example.quiz.Repositories
 
+import android.util.Log
 import com.example.quiz.Model.QuizDetailModel
 import com.google.firebase.firestore.FirebaseFirestore
-import java.lang.Exception
+
 
 class QuizDetailRepository {
-    private val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firebaseFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private val quizCollection = firebaseFirestore.collection("QuizList")
-    private lateinit var quiz: String
 
-    fun setQuiz(quiz: String){
-        this.quiz = quiz
-    }
-
-    fun getQuiz(onQuizLoad: OnQuizLoad) {
-        quizCollection.get()
-            .addOnSuccessListener { querySnapshot ->
-                val quizList = mutableListOf<QuizDetailModel>()
-                for (document in querySnapshot.documents) {
-                    val question = document.getString("question") ?: ""
-                    val answer = document.getString("answer") ?: ""
-                    val optionA = document.getString("optionA") ?: ""
-                    val optionB = document.getString("optionB") ?: ""
-                    val optionC = document.getString("optionC") ?: ""
-                    val optionD = document.getString("optionD") ?: ""
-                    val timer = document.getLong("timer") ?: 0
-
-                    val quiz = QuizDetailModel(question, answer, optionA, optionB, optionC, optionD, timer)
-                    quizList.add(quiz)
+    fun getQuizzes(callback : (List<QuizDetailModel>?) -> Unit) {
+        quizCollection
+            .get()
+            .addOnSuccessListener { documents ->
+                val quizzes = mutableListOf<QuizDetailModel>()
+                for (document in documents) {
+                    val quizDetail = document.toObject(QuizDetailModel::class.java)
+                    quizzes.add(quizDetail)
+                    Log.d("FirestoreTest", "Quizzes retrieved: $quizzes")
                 }
-                onQuizLoad.onLoad(quizList)
+                callback(quizzes)
             }
-            .addOnFailureListener { exception ->
-                onQuizLoad.onError(exception)
+            .addOnFailureListener {exception ->
+                Log.e("FirestoreTest", "Error getting quizzes", exception)
+                callback(null)
             }
     }
-}
-interface OnQuizLoad {
-    fun onLoad(quizModel : List<QuizDetailModel>)
-    fun onError(e : Exception)
 }

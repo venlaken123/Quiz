@@ -1,10 +1,8 @@
 package com.example.quiz.Model
 
-import com.google.firebase.firestore.DocumentId
 
 data class QuizDetailModel(
-    @DocumentId
-    var quiz: String = "",
+    var question: String = "", //tại sao phải khởi tạo
     var answer: String = "",
     var optionA: String = "",
     var optionB: String = "",
