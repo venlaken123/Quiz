@@ -22,7 +22,7 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/loginlogo"
+        android:src="@drawable/congratzlogo"
         android:layout_marginTop="50dp"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"

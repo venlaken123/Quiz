@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.collection.LLRBNode
 
 @Suppress("DEPRECATION")
 class SignInFragment : Fragment() {
@@ -96,7 +97,7 @@ class SignInFragment : Fragment() {
             // Display error message if login fails
             Toast.makeText(requireContext() , errorMessage , Toast.LENGTH_SHORT).show()
         }
-
+        
         // Xử lý sign in với Google
         signInGoogleButton.setOnClickListener{
             startSignInWithGoogle()

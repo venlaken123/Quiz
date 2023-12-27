@@ -21,10 +21,6 @@ import com.example.quiz.ViewModel.ResultViewModelFactory
 
 class ResultFragment : Fragment() {
 
-    private val authViewModel by viewModels<AuthViewModel>{
-        AuthViewModelFactory(AuthRepository())
-    }
-
     private val resultViewModel by viewModels<ResultViewModel> {
         ResultViewModelFactory(ResultRepository())
     }
@@ -57,9 +53,7 @@ class ResultFragment : Fragment() {
         }
 
         buttonExit.setOnClickListener{
-            authViewModel.signOut()
-            navController.navigate(R.id.action_resultFragment_to_signInFragment)
-            Toast.makeText(requireContext(), "Exit successfully", Toast.LENGTH_SHORT).show()
+            navController.navigate(R.id.action_resultFragment_to_beginScreenFragment)
         }
 
         resultViewModel.correctAnswers.observe(viewLifecycleOwner) { correct ->

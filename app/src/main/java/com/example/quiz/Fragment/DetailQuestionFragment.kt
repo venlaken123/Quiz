@@ -36,12 +36,15 @@ class DetailQuestionFragment : Fragment() {
     private lateinit var navController : NavController
 
     private lateinit var progressBar: ProgressBar
+    private lateinit var progressBar2: ProgressBar
     private lateinit var optionAButton : Button
     private lateinit var optionBButton : Button
     private lateinit var optionCButton : Button
     private lateinit var optionDButton : Button
     private lateinit var finishButton : Button
     private lateinit var nextButton : Button
+    private lateinit var correctAnswerTv : TextView
+    private lateinit var wrongAnswerTv : TextView
     private lateinit var questionTv : TextView
     private lateinit var correctTv : TextView
     private lateinit var wrongTv : TextView
@@ -66,19 +69,22 @@ class DetailQuestionFragment : Fragment() {
         super.onViewCreated(view , savedInstanceState)
 
         navController = Navigation.findNavController(view)
+
         progressBar = view.findViewById(R.id.progressBar)
+        progressBar2 = view.findViewById(R.id.progressBar2)
         optionAButton = view.findViewById(R.id.btnOptionA)
         optionBButton = view.findViewById(R.id.btnOptionB)
         optionCButton = view.findViewById(R.id.btnOptionC)
         optionDButton = view.findViewById(R.id.btnOptionD)
         finishButton = view.findViewById(R.id.btnFinish)
         nextButton = view.findViewById(R.id.btnNext)
+        correctAnswerTv = view.findViewById(R.id.textViewCorrectAnswer)
+        wrongAnswerTv = view.findViewById(R.id.textViewWrongAnswer)
         questionTv = view.findViewById(R.id.tvQuizDetail)
         correctTv = view.findViewById(R.id.textViewCorrect)
         wrongTv = view.findViewById(R.id.textViewWrong)
         timerCount = view.findViewById(R.id.tvCountTimer)
 
-        progressBar.visibility = View.VISIBLE
 
         // Fetch quizzes
         quizDetailViewModel.getQuizzes()
@@ -88,12 +94,15 @@ class DetailQuestionFragment : Fragment() {
             if (!quizzes.isNullOrEmpty()) {
                 progressBar.visibility = View.GONE
 
+                progressBar2.visibility = View.VISIBLE
                 optionAButton.visibility = View.VISIBLE
                 optionBButton.visibility = View.VISIBLE
                 optionCButton.visibility = View.VISIBLE
                 optionDButton.visibility = View.VISIBLE
                 finishButton.visibility = View.VISIBLE
                 nextButton.visibility = View.VISIBLE
+                correctAnswerTv.visibility = View.VISIBLE
+                wrongAnswerTv.visibility = View.VISIBLE
                 questionTv.visibility = View.VISIBLE
                 correctTv.visibility = View.VISIBLE
                 wrongTv.visibility = View.VISIBLE

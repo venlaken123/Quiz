@@ -37,11 +37,11 @@
         android:label="fragment_result"
         tools:layout="@layout/fragment_result" >
         <action
-            android:id="@+id/action_resultFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
-        <action
             android:id="@+id/action_resultFragment_to_detailQuestionFragment"
             app:destination="@id/detailQuestionFragment" />
+        <action
+            android:id="@+id/action_resultFragment_to_beginScreenFragment"
+            app:destination="@id/beginScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
