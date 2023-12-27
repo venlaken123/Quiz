@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -34,6 +35,7 @@ class DetailQuestionFragment : Fragment() {
 
     private lateinit var navController : NavController
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var optionAButton : Button
     private lateinit var optionBButton : Button
     private lateinit var optionCButton : Button
@@ -49,6 +51,8 @@ class DetailQuestionFragment : Fragment() {
     private var timer : CountDownTimer? = null
     private var correctAnswers = 0
     private var wrongAnswers = 0
+    private var answeredQuestion = 0
+    private var hasSelectedAnswer = false
 
     override fun onCreateView(
         inflater : LayoutInflater , container : ViewGroup? ,
@@ -62,6 +66,7 @@ class DetailQuestionFragment : Fragment() {
         super.onViewCreated(view , savedInstanceState)
 
         navController = Navigation.findNavController(view)
+        progressBar = view.findViewById(R.id.progressBar)
         optionAButton = view.findViewById(R.id.btnOptionA)
         optionBButton = view.findViewById(R.id.btnOptionB)
         optionCButton = view.findViewById(R.id.btnOptionC)
@@ -73,23 +78,38 @@ class DetailQuestionFragment : Fragment() {
         wrongTv = view.findViewById(R.id.textViewWrong)
         timerCount = view.findViewById(R.id.tvCountTimer)
 
+        progressBar.visibility = View.VISIBLE
+
+        // Fetch quizzes
+        quizDetailViewModel.getQuizzes()
+
         quizDetailViewModel.quizzes.observe(viewLifecycleOwner) { quizzes ->
             // Handle when quizzes are fetched
             if (!quizzes.isNullOrEmpty()) {
-                Log.d("LiveDataUpdate" , "Quizzes updated: $quizzes")
+                progressBar.visibility = View.GONE
+
+                optionAButton.visibility = View.VISIBLE
+                optionBButton.visibility = View.VISIBLE
+                optionCButton.visibility = View.VISIBLE
+                optionDButton.visibility = View.VISIBLE
+                finishButton.visibility = View.VISIBLE
+                nextButton.visibility = View.VISIBLE
+                questionTv.visibility = View.VISIBLE
+                correctTv.visibility = View.VISIBLE
+                wrongTv.visibility = View.VISIBLE
+                timerCount.visibility = View.VISIBLE
                 // Logic to display the first question when quizzes are loaded
                 displayQuizData(quizDetailViewModel.getCurrentQuiz())
-                Log.d("OptionTest" , "${quizDetailViewModel.getCurrentQuiz()?.optionA}")
             }
         }
         // Load the next question on button click
         nextButton.setOnClickListener {
             moveToNextQuestion()
         }
-        // Fetch quizzes
-        quizDetailViewModel.getQuizzes()
+
 
         finishButton.setOnClickListener {
+            calculateUnansweredQuestions()
             resultViewModel.updateQuizResult(correctAnswers, wrongAnswers){isSuccess ->
                 if (isSuccess){
                     showResultDialog()
@@ -103,22 +123,30 @@ class DetailQuestionFragment : Fragment() {
 
     private fun moveToNextQuestion() {
         val currentIndex = quizDetailViewModel.currentQuizIndex.value ?: 0
+
+        // Kiểm tra xem người dùng đã chọn câu trả lời hay chưa
+        if (!hasSelectedAnswer) {
+            // Nếu người dùng chưa chọn câu trả lời, tăng biến wrongAnswers lên 1
+            wrongAnswers++
+            wrongTv.text = wrongAnswers.toString()
+        }
+
         if (currentIndex < (quizDetailViewModel.quizzes.value?.size ?: 0) - 1) {
-            quizDetailViewModel.setCurrentQuizIndex(currentIndex + 1)
+            answeredQuestion = currentIndex + 1
+            quizDetailViewModel.setCurrentQuizIndex(answeredQuestion)
             resetUI()
             displayQuizData(quizDetailViewModel.getCurrentQuiz())
         } else {
-            resultViewModel.updateQuizResult(correctAnswers, wrongAnswers){isSuccess ->
-                if (isSuccess){
+            // Logic xử lý khi hoàn thành tất cả các câu hỏi
+            resultViewModel.updateQuizResult(correctAnswers, wrongAnswers) { isSuccess ->
+                if (isSuccess) {
                     showResultDialog()
-                }
-                else{
+                } else {
                     Log.d("FirebaseError", "Error updating result")
                 }
             }
         }
     }
-
     private fun resetUI() {
         optionAButton.setBackgroundColor(Color.WHITE)
         optionBButton.setBackgroundColor(Color.WHITE)
@@ -147,18 +175,22 @@ class DetailQuestionFragment : Fragment() {
             optionAButton.setOnClickListener {
                 checkAnswer(detail.optionA , detail.answer)
                 disableButtons()
+                hasSelectedAnswer = true
             }
             optionBButton.setOnClickListener {
                 checkAnswer(detail.optionB , detail.answer)
                 disableButtons()
+                hasSelectedAnswer = true
             }
             optionCButton.setOnClickListener {
                 checkAnswer(detail.optionC , detail.answer)
                 disableButtons()
+                hasSelectedAnswer = true
             }
             optionDButton.setOnClickListener {
                 checkAnswer(detail.optionD , detail.answer)
                 disableButtons()
+                hasSelectedAnswer = true
             }
 
             // Set up timer
@@ -186,6 +218,7 @@ class DetailQuestionFragment : Fragment() {
         optionCButton.isEnabled = false
         optionDButton.isEnabled = false
     }
+
 
     private fun checkAnswer(selectedAnswer : String , correctAnswer : String) {
         if (selectedAnswer == correctAnswer) {
@@ -242,5 +275,13 @@ class DetailQuestionFragment : Fragment() {
 
         alertDialogBuilder.setCancelable(false)
         alertDialogBuilder.show()
+    }
+
+    private fun calculateUnansweredQuestions() {
+        val totalQuestions = quizDetailViewModel.quizzes.value?.size ?: 0
+        val answeredQuestions = correctAnswers + wrongAnswers
+        val unanswered = totalQuestions - answeredQuestions
+        wrongAnswers += unanswered
+        wrongTv.text = wrongAnswers.toString()
     }
 }

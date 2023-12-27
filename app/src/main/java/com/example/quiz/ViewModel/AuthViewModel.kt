@@ -12,11 +12,16 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
 
     private var _errorMessageLiveData : MutableLiveData<String> = MutableLiveData()
     val errorMessageLiveData : LiveData<String> get() = _errorMessageLiveData
+
+    private val _signInSuccessLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val signInSuccessLiveData: LiveData<Boolean> get() = _signInSuccessLiveData
+
     private var _resetPasswordSuccessLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val resetPasswordSuccessLiveData: LiveData<Boolean> get() = _resetPasswordSuccessLiveData
 
     private var _resetPasswordErrorLiveData: MutableLiveData<String> = MutableLiveData()
     val resetPasswordErrorLiveData: LiveData<String> get() = _resetPasswordErrorLiveData
+
 
     fun signIn(email : String , password : String) {
         authRepository.signIn(email , password ,
@@ -38,6 +43,12 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
                 _errorMessageLiveData.postValue(errorMessage)
             }
         )
+    }
+
+    fun signInWithGoogle(idToken: String) {
+        authRepository.signInWithGoogle(idToken) { isSuccess ->
+            _signInSuccessLiveData.postValue(isSuccess)
+        }
     }
     fun resetPassword(email: String) {
         authRepository.resetPassword(

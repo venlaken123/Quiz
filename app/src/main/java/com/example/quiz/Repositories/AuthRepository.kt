@@ -2,6 +2,7 @@ package com.example.quiz.Repositories
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthRepository {
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
@@ -42,6 +43,14 @@ class AuthRepository {
 
     fun signOut(){
         auth.signOut()
+    }
+
+    fun signInWithGoogle(idToken: String, onComplete: (Boolean) -> Unit) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(firebaseCredential)
+            .addOnCompleteListener { task ->
+                onComplete(task.isSuccessful)
+            }
     }
 
     fun resetPassword(
