@@ -1,7 +1,5 @@
 package com.example.quiz.Repositories
 
-import android.util.Log
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -44,19 +42,19 @@ class AuthRepository {
             }
     }
 
-    fun signOut(){
+    fun signOut() {
         auth.signOut()
     }
 
-    fun signInWithGoogle(idToken: String, onComplete: (Boolean) -> Unit) {
-        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+    fun signInWithGoogle(idToken : String , onComplete : (Boolean) -> Unit) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken , null)
         auth.signInWithCredential(firebaseCredential)
             .addOnCompleteListener { task ->
                 onComplete(task.isSuccessful)
             }
     }
 
-    private fun checkEmailExistence(email: String, onResult: (Boolean) -> Unit) {
+    private fun checkEmailExistence(email : String , onResult : (Boolean) -> Unit) {
         auth.fetchSignInMethodsForEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -71,7 +69,7 @@ class AuthRepository {
             }
     }
 
-    fun sendPasswordResetEmail(email: String, onComplete: (Boolean) -> Unit) {
+    fun sendPasswordResetEmail(email : String , onComplete : (Boolean) -> Unit) {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

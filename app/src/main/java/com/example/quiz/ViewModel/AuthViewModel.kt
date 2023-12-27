@@ -1,6 +1,5 @@
 package com.example.quiz.ViewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,9 +13,8 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
     private var _errorMessageLiveData : MutableLiveData<String> = MutableLiveData()
     val errorMessageLiveData : LiveData<String> get() = _errorMessageLiveData
 
-    private val _signInSuccessLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val signInSuccessLiveData: LiveData<Boolean> get() = _signInSuccessLiveData
-
+    private val _signInSuccessLiveData : MutableLiveData<Boolean> = MutableLiveData()
+    val signInSuccessLiveData : LiveData<Boolean> get() = _signInSuccessLiveData
 
 
     fun signIn(email : String , password : String) {
@@ -41,16 +39,18 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
         )
     }
 
-    fun signInWithGoogle(idToken: String) {
+    fun signInWithGoogle(idToken : String) {
         authRepository.signInWithGoogle(idToken) { isSuccess ->
             _signInSuccessLiveData.postValue(isSuccess)
         }
     }
-    fun sendPasswordResetEmail(email: String, onComplete: (Boolean) -> Unit) {
+
+    fun sendPasswordResetEmail(email : String , onComplete : (Boolean) -> Unit) {
         authRepository.sendPasswordResetEmail(email) { isSuccess ->
             onComplete(isSuccess)
         }
     }
+
     fun signOut() {
         authRepository.signOut()
     }

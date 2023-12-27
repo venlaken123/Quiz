@@ -35,8 +35,8 @@ class DetailQuestionFragment : Fragment() {
 
     private lateinit var navController : NavController
 
-    private lateinit var progressBar: ProgressBar
-    private lateinit var progressBar2: ProgressBar
+    private lateinit var progressBar : ProgressBar
+    private lateinit var progressBar2 : ProgressBar
     private lateinit var optionAButton : Button
     private lateinit var optionBButton : Button
     private lateinit var optionCButton : Button
@@ -119,12 +119,11 @@ class DetailQuestionFragment : Fragment() {
 
         finishButton.setOnClickListener {
             calculateUnansweredQuestions()
-            resultViewModel.updateQuizResult(correctAnswers, wrongAnswers){isSuccess ->
-                if (isSuccess){
+            resultViewModel.updateQuizResult(correctAnswers , wrongAnswers) { isSuccess ->
+                if (isSuccess) {
                     showResultDialog()
-                }
-                else{
-                    Log.d("FirebaseError", "Error updating result")
+                } else {
+                    Log.d("FirebaseError" , "Error updating result")
                 }
             }
         }
@@ -147,15 +146,16 @@ class DetailQuestionFragment : Fragment() {
             displayQuizData(quizDetailViewModel.getCurrentQuiz())
         } else {
             // Logic xử lý khi hoàn thành tất cả các câu hỏi
-            resultViewModel.updateQuizResult(correctAnswers, wrongAnswers) { isSuccess ->
+            resultViewModel.updateQuizResult(correctAnswers , wrongAnswers) { isSuccess ->
                 if (isSuccess) {
                     showResultDialog()
                 } else {
-                    Log.d("FirebaseError", "Error updating result")
+                    Log.d("FirebaseError" , "Error updating result")
                 }
             }
         }
     }
+
     private fun resetUI() {
         optionAButton.setBackgroundColor(Color.WHITE)
         optionBButton.setBackgroundColor(Color.WHITE)

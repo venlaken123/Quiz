@@ -1,7 +1,6 @@
 package com.example.quiz.Repositories
 
 import android.util.Log
-import com.example.quiz.Model.QuizDetailModel
 import com.example.quiz.Model.ResultModel
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,7 +17,7 @@ class ResultRepository {
                     resultDetail.correctAnswers = document.getLong("correctAnswers")?.toInt() ?: 0
                     resultDetail.wrongAnswers = document.getLong("wrongAnswers")?.toInt() ?: 0
                     quizResult.add(resultDetail)
-                    Log.d("FirestoreTest", "Quizzes retrieved: $quizResult")
+                    Log.d("FirestoreTest" , "Quizzes retrieved: $quizResult")
                 }
                 callback(quizResult)
             }
@@ -27,9 +26,10 @@ class ResultRepository {
                 callback(null)
             }
     }
-    fun updateQuizResult(quizResult: ResultModel, completion: (Boolean) -> Unit) {
+
+    fun updateQuizResult(quizResult : ResultModel , completion : (Boolean) -> Unit) {
         val resultData = hashMapOf(
-            "correctAnswers" to quizResult.correctAnswers,
+            "correctAnswers" to quizResult.correctAnswers ,
             "wrongAnswers" to quizResult.wrongAnswers
         )
 

@@ -1,21 +1,17 @@
 package com.example.quiz.Fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.quiz.R
-import com.example.quiz.Repositories.AuthRepository
 import com.example.quiz.Repositories.ResultRepository
-import com.example.quiz.ViewModel.AuthViewModel
-import com.example.quiz.ViewModel.AuthViewModelFactory
 import com.example.quiz.ViewModel.ResultViewModel
 import com.example.quiz.ViewModel.ResultViewModelFactory
 
@@ -25,10 +21,10 @@ class ResultFragment : Fragment() {
         ResultViewModelFactory(ResultRepository())
     }
 
-    private lateinit var buttonPlayAgain: Button
-    private lateinit var buttonExit: Button
-    private lateinit var textCorrect: TextView
-    private lateinit var textWrong: TextView
+    private lateinit var buttonPlayAgain : Button
+    private lateinit var buttonExit : Button
+    private lateinit var textCorrect : TextView
+    private lateinit var textWrong : TextView
 
     private lateinit var navController : NavController
     override fun onCreateView(
@@ -48,11 +44,11 @@ class ResultFragment : Fragment() {
         textWrong = view.findViewById(R.id.textViewWrongResult)
         navController = Navigation.findNavController(view)
 
-        buttonPlayAgain.setOnClickListener{
+        buttonPlayAgain.setOnClickListener {
             navController.navigate(R.id.action_resultFragment_to_detailQuestionFragment)
         }
 
-        buttonExit.setOnClickListener{
+        buttonExit.setOnClickListener {
             navController.navigate(R.id.action_resultFragment_to_beginScreenFragment)
         }
 

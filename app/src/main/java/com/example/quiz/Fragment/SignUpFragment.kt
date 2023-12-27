@@ -1,16 +1,14 @@
 package com.example.quiz.Fragment
 
-import android.app.Application
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.quiz.R
@@ -21,7 +19,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 
 class SignUpFragment : Fragment() {
-    private val authViewModel by viewModels<AuthViewModel>{
+    private val authViewModel by viewModels<AuthViewModel> {
         AuthViewModelFactory(AuthRepository())
     }
 
@@ -57,7 +55,7 @@ class SignUpFragment : Fragment() {
             val password = passwordEdt.editText?.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                authViewModel.signUp(email, password)
+                authViewModel.signUp(email , password)
             }
 
             authViewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser ->
@@ -65,7 +63,7 @@ class SignUpFragment : Fragment() {
                     navController.navigate(R.id.action_signUpFragment_to_signInFragment)
                 } else {
                     Toast.makeText(
-                        requireContext(), "User data not available", Toast.LENGTH_SHORT
+                        requireContext() , "User data not available" , Toast.LENGTH_SHORT
                     ).show()
                 }
             }
