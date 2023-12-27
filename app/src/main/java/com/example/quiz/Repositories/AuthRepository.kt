@@ -1,9 +1,12 @@
 package com.example.quiz.Repositories
 
+import android.util.Log
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
+@Suppress("DEPRECATION")
 class AuthRepository {
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -53,17 +56,28 @@ class AuthRepository {
             }
     }
 
-    fun resetPassword(
-        email: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
+    private fun checkEmailExistence(email: String, onResult: (Boolean) -> Unit) {
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods ?: emptyList()
+                    // Kiểm tra xem có phương thức đăng nhập nào được liên kết với email này không
+                    val exists = signInMethods.isNotEmpty()
+                    onResult(exists)
+                } else {
+                    // Xảy ra lỗi khi kiểm tra sự tồn tại của email
+                    onResult(false)
+                }
+            }
+    }
+
+    fun sendPasswordResetEmail(email: String, onComplete: (Boolean) -> Unit) {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onSuccess()
+                    onComplete(true)
                 } else {
-                    onError("Failed to send password reset email")
+                    onComplete(false)
                 }
             }
     }
