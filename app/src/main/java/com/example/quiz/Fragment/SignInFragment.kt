@@ -107,10 +107,15 @@ class SignInFragment : Fragment() {
         }
     }
 
+    //Tạo intent để thực hiện đăng nhập Google qua GoogleSignIn.getClient()
     private fun startSignInWithGoogle() {
         val signInIntent = getGoogleSignInIntent()
         startActivityForResult(signInIntent , googleRequestCode)
     }
+
+    //Tạo và trả về một Intent để đăng nhập google
+    //GoogleSignInOptions.Builder xây dựng tùy chọn đăng nhập (cái activity của google hiện lên khi bấm button)
+    //requestIdToken: yêu cầu token ID từ máy chủ của bạn thông qua web client ID
 
     private fun getGoogleSignInIntent() : Intent {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -121,10 +126,12 @@ class SignInFragment : Fragment() {
         )
         return googleSignInClient.signInIntent
     }
-
+    //Khi một hoạt động con (hoạt động từ dịch vụ bên ngoài) hoàn thành và trả về kết quả, gọi onActivityResult để xử lý kết quả đó
+    //Nhận kết quả từ cuộc gọi startActivityForResult
     override fun onActivityResult(requestCode : Int , resultCode : Int , data : Intent?) {
         super.onActivityResult(requestCode , resultCode , data)
 
+        //check reques code để chắc chắn đây là kết quả của hành động đăng nhập ggl
         if (requestCode == googleRequestCode) {
             if (data != null) {
                 val idToken = handleGoogleSignInResult(data)
@@ -137,6 +144,9 @@ class SignInFragment : Fragment() {
         }
     }
 
+    //Xử lý kết quả trả về từ hành động đăng nhập ggl
+    //Gọi GoogleSignIn.getSignedInAccountFromIntent(data) để lấy thông tin tài khoản sau khi đăng nhập thành công
+    //Trả về idToken
     private fun handleGoogleSignInResult(data : Intent?) : String? {
         try {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)

@@ -46,6 +46,10 @@ class AuthRepository {
         auth.signOut()
     }
 
+    /* null là accessToken.
+    Access Token: Đây cũng là một chuỗi xác thực nhưng tập trung vào việc xác minh quyền truy cập của người dùng vào tài nguyên
+    của Google (ví dụ: dữ liệu trên Google Drive). Trong trường hợp sử dụng Firebase Authentication với Google, thường chỉ cần
+    idToken và không cần sử dụng accessToken */
     fun signInWithGoogle(idToken : String , onComplete : (Boolean) -> Unit) {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken , null)
         auth.signInWithCredential(firebaseCredential)

@@ -38,6 +38,9 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
             }
         )
     }
+    fun signOut() {
+        authRepository.signOut()
+    }
 
     fun signInWithGoogle(idToken : String) {
         authRepository.signInWithGoogle(idToken) { isSuccess ->
@@ -51,9 +54,7 @@ class AuthViewModel(private val authRepository : AuthRepository) : ViewModel() {
         }
     }
 
-    fun signOut() {
-        authRepository.signOut()
-    }
+
 }
 
 
